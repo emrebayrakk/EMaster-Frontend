@@ -1,71 +1,51 @@
-import React, { useState } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
-import { store } from "./redux/store";
+import { ToastContainer } from "react-toastify";
+import store from "./redux/store";
+import PrivateRoute from "./components/PrivateRoute";
+import PublicRoute from "./components/PublicRoute";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
-import ProtectedRoute from "./routes/ProtectedRoute";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
+import Register from "./pages/Register";
 
-const getToken = () => {
-  return localStorage.getItem("authToken");
-};
-
-const App = () => {
-  const [theme, setTheme] = useState("dark");
-  const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
-  };
-
+function App() {
   return (
     <Provider store={store}>
       <Router>
-        <div
-          className={
-            theme === "dark" ? "bg-dark text-white" : "bg-light text-dark"
-          }
-        >
-          <Routes>
-            {/* Varsayılan yönlendirme */}
-            <Route
-              path="/"
-              element={
-                getToken() ? (
-                  <Navigate to="/dashboard" />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
-            />
-            {/* Login Sayfası */}
-            <Route
-              path="/login"
-              element={<Login toggleTheme={toggleTheme} theme={theme} />}
-            />
-            {/* Register Sayfası */}
-            <Route
-              path="/register"
-              element={<Register toggleTheme={toggleTheme} theme={theme} />}
-            />
-            {/* Dashboard Sayfası */}
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard toggleTheme={toggleTheme} theme={theme} />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </div>
+        <Routes>
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <PublicRoute>
+                <Register />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
+          <Route path="*" element={<Login />} />
+        </Routes>
+        <ToastContainer />
       </Router>
     </Provider>
   );
-};
+}
 
 export default App;

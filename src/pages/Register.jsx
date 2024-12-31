@@ -1,75 +1,106 @@
-import React, { useState } from "react";
-import { dynamicApiRequest } from "../utils/api";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { authAPI } from "../services/api";
+import { toast } from "react-toastify";
 
-const Register = ({ toggleTheme, theme }) => {
+const Register = () => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     username: "",
     email: "",
-    passwordHash: "",
+    password: "",
   });
+  const navigate = useNavigate();
 
-  const handleRegister = async (e) => {
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await dynamicApiRequest("/User/register", "POST", formData);
-      alert("Registration successful");
-    } catch (err) {
-      alert(err.message || "Registration failed");
+      await authAPI.register(formData);
+      toast.success("Registration successful! Please login.");
+      navigate("/login");
+    } catch (error) {
+      toast.error(error.message);
     }
   };
 
   return (
-    <div
-      className={`d-flex align-items-center justify-content-center vh-100 ${
-        theme === "dark" ? "bg-dark text-white" : "bg-light text-dark"
-      }`}
-    >
+    <div className="min-vh-100 d-flex align-items-center justify-content-center bg-light">
       <div
-        className="card p-4 shadow-lg"
-        style={{ maxWidth: "500px", width: "100%" }}
+        className="card shadow-lg border-0"
+        style={{ maxWidth: "400px", width: "90%" }}
       >
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <h2 className="text-center">Register</h2>
-          <button
-            className="btn btn-sm btn-outline-secondary"
-            onClick={toggleTheme}
-          >
-            {theme === "dark" ? "☀️" : "🌙"}
-          </button>
+        <div className="card-body p-5">
+          <h2 className="text-center mb-4">Register</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <input
+                type="text"
+                className="form-control"
+                name="firstName"
+                placeholder="First Name"
+                value={formData.firstName}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <input
+                type="text"
+                className="form-control"
+                name="lastName"
+                placeholder="Last Name"
+                value={formData.lastName}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <input
+                type="text"
+                className="form-control"
+                name="username"
+                placeholder="Username"
+                value={formData.username}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <input
+                type="email"
+                className="form-control"
+                name="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <input
+                type="password"
+                className="form-control"
+                name="password"
+                placeholder="Password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <button type="submit" className="btn btn-primary w-100 mb-3">
+              Register
+            </button>
+            <p className="text-center mb-0">
+              Already have an account? <Link to="/login">Login</Link>
+            </p>
+          </form>
         </div>
-        <form onSubmit={handleRegister}>
-          {["firstName", "lastName", "username", "email", "passwordHash"].map(
-            (field) => (
-              <div key={field} className="mb-3">
-                <label className="form-label" htmlFor={field}>
-                  {field.replace("Hash", "")}
-                </label>
-                <input
-                  type={field === "passwordHash" ? "password" : "text"}
-                  id={field}
-                  className="form-control"
-                  placeholder={`Enter your ${field.replace("Hash", "")}`}
-                  value={formData[field]}
-                  onChange={(e) =>
-                    setFormData({ ...formData, [field]: e.target.value })
-                  }
-                />
-              </div>
-            )
-          )}
-          <button type="submit" className="btn btn-success w-100 mb-2">
-            Register
-          </button>
-          <p className="text-center">
-            Already have an account?{" "}
-            <Link to="/login" className="text-decoration-none">
-              Login
-            </Link>
-          </p>
-        </form>
       </div>
     </div>
   );
