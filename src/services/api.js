@@ -58,4 +58,8 @@ export const authAPI = {
   register: (userData) => api.post("/User/register", userData),
 };
 
+export const dashboardAPI = {
+  getUsers: () => api.get("/User/List"),
+};
+
 export default api;
