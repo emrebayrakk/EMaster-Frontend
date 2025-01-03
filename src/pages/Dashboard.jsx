@@ -21,52 +21,38 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
-  if (!isAuthenticated) {
-    navigate("/login");
-    return null;
-  }
-
-  const handleSidebarToggle = (collapsed) => {
-    setIsSidebarCollapsed(collapsed);
-  };
-
   return (
-    <div className="dashboard-container">
-      <Sidebar onToggle={handleSidebarToggle} />
-      <div className={`main-content ${isSidebarCollapsed ? "shifted" : ""}`}>
-        <main>
-          <DashboardHeader />
-          <DashboardCards />
-          <div className="container mt-4">
-            <h3>User Data</h3>
-            <div className="table-responsive">
-              <table className="table table-hover">
-                <thead className="table-dark">
-                  <tr>
-                    <th>Id</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {userData.map((user) => (
-                    <tr key={user.id}>
-                      <td>{user.id}</td>
-                      <td>{user.firstName}</td>
-                      <td>{user.lastName}</td>
-                      <td>{user.username}</td>
-                      <td>{user.email}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </main>
+    <main>
+      <DashboardHeader />
+      <DashboardCards />
+      <div className="container mt-4">
+        <h3>User Data</h3>
+        <div className="table-responsive">
+          <table className="table table-hover">
+            <thead className="table-dark">
+              <tr>
+                <th>Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Username</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+            <tbody>
+              {userData.map((user) => (
+                <tr key={user.id}>
+                  <td>{user.id}</td>
+                  <td>{user.firstName}</td>
+                  <td>{user.lastName}</td>
+                  <td>{user.username}</td>
+                  <td>{user.email}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </main>
   );
 };
 

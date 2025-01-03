@@ -2,14 +2,16 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import store from "./redux/store";
-import PrivateRoute from "./components/PrivateRoute";
-import PublicRoute from "./components/PublicRoute";
+import PrivateRoute from "./routes/PrivateRoute";
+import PublicRoute from "./routes/PublicRoute";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import Register from "./pages/Register";
+import PrivateLayout from "./layouts/PrivateLayout";
+import PublicLayout from "./layouts/PublicLayout";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-import Register from "./pages/Register";
 
 function App() {
   return (
@@ -19,25 +21,31 @@ function App() {
           <Route
             path="/login"
             element={
-              <PublicRoute>
-                <Login />
-              </PublicRoute>
+              <PublicLayout>
+                <PublicRoute>
+                  <Login />
+                </PublicRoute>
+              </PublicLayout>
             }
           />
           <Route
             path="/register"
             element={
-              <PublicRoute>
-                <Register />
-              </PublicRoute>
+              <PublicLayout>
+                <PublicRoute>
+                  <Register />
+                </PublicRoute>
+              </PublicLayout>
             }
           />
           <Route
             path="/dashboard"
             element={
-              <PrivateRoute>
-                <Dashboard />
-              </PrivateRoute>
+              <PrivateLayout>
+                <PrivateRoute>
+                  <Dashboard />
+                </PrivateRoute>
+              </PrivateLayout>
             }
           />
           <Route path="*" element={<Login />} />
